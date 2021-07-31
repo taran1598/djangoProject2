@@ -2,7 +2,7 @@ import csv
 import math
 
 import pandas
-from .models import FoodName, NutrientName, NutrientAmount
+from website_name.models import FoodName, NutrientName, NutrientAmount
 
 
 class ParserCSV:
