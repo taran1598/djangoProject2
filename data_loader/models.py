@@ -1,3 +1,5 @@
+import math
+
 from django.db import models
 
 
@@ -93,3 +95,27 @@ class NutrientName(models.Model):
             for i, row in df.iterrows()
         ]
         NutrientName.objects.bulk_create(batch_food_name_objects)
+
+
+class FoodGroup(models.Model):
+    food_group_id = models.IntegerField(primary_key=True)
+    food_group_code = models.IntegerField()
+    food_group_name = models.CharField(max_length=200)
+    food_group_name_french = models.CharField(max_length=200)
+
+    @staticmethod
+    def populate_model_food_group_dataframe(df):
+        # TODO: FIND WAY TO GENERALIZE THIS METHOD
+        """
+        Helper method that populates the NutrientName model from a csv file
+        :param df: data frame object that contains the data from the csv file
+        """
+        batch_food_name_objects = [
+            FoodGroup(
+                food_group_id=row['FoodGroupID'],
+                food_group_code=row['FoodGroupCode'],
+                food_group_name=row['FoodGroupName'],
+            )
+            for i, row in df.iterrows()
+        ]
+        FoodGroup.objects.bulk_create(batch_food_name_objects)

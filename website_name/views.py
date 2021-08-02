@@ -10,3 +10,7 @@ def index(request):
 
 def ingredient(request):
     return render(request, 'website_name/ingredient.html')
+
+
+def search(request):
+    return render(request, 'website_name/index.html')

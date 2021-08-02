@@ -1,8 +1,7 @@
 import csv
-import math
 
 import pandas
-from website_name.models import FoodName, NutrientName, NutrientAmount
+from data_loader.models import FoodName, NutrientName, NutrientAmount
 
 
 class ParserCSV:
@@ -24,23 +23,6 @@ class ParserCSV:
         """
         df = pandas.read_csv(src_file_to_parse)
         model_to_populate(df)
-        # df.to_sql(FoodName, con=settings.DATABASES.get('ENGINE'))
-        # batch_food_name_objects = [
-        #     FoodName(
-        #         food_id=row['FoodID'],
-        #         food_code=row['FoodCode'],
-        #         food_group_id=row['FoodGroupID'],
-        #         food_source_id=row['FoodSourceID'],
-        #         food_desc=row['FoodDescription'],
-        #         food_desc_f=row['FoodDescriptionF'],
-        #         food_date_of_entry=row['FoodDateOfEntry'],
-        #         food_date_of_publication="" if math.isnan(row['FoodDateOfPublication']) else row['FoodDateOfPublication'],
-        #         country_code=-1 if math.isnan(row['CountryCode']) else row['CountryCode'],
-        #         scientific_name="" if math.isnan(row['ScientificName']) else row['ScientificName']
-        #     )
-        #     for i, row in df.iterrows()
-        # ]
-        # FoodName.objects.bulk_create(batch_food_name_objects)
 
     @staticmethod
     def string_to_list(string_to_convert, delimiter) -> list:
