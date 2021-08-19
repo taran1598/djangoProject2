@@ -1,6 +1,7 @@
 import math
 
 from django.db import models
+from django.db.models import Q
 
 
 # Create your models here.
@@ -23,7 +24,7 @@ class FoodName(models.Model):
         Helper method that populates the FoodName model from a csv file
         :param df: data frame object that contains the data from the csv file
         """
-        batch_food_name_objects = [
+        batch_objects = [
             FoodName(
                 food_id=row['FoodID'],
                 food_code=row['FoodCode'],
@@ -39,15 +40,17 @@ class FoodName(models.Model):
             )
             for i, row in df.iterrows()
         ]
-        FoodName.objects.bulk_create(batch_food_name_objects)
+        FoodName.objects.bulk_create(batch_objects)
 
 
 class NutrientAmount(models.Model):
-    food_id = models.IntegerField()
+    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
     nutrient_id = models.IntegerField()
     nutrient_value = models.FloatField()
     nutrient_source_id = models.IntegerField()
     nutrient_date_of_entry = models.CharField(max_length=200)
+
+    # food_name = models.ForeignKey(FoodName, on_delete=models.CASCADE)
 
     @staticmethod
     def populate_model_nutrient_amount_dataframe(df):
@@ -55,9 +58,9 @@ class NutrientAmount(models.Model):
         Helper method that populates the NutrientAmount model from a csv file
         :param df: data frame object that contains the data from the csv file
         """
-        batch_food_name_objects = [
+        batch_objects = [
             NutrientAmount(
-                food_id=row['FoodID'],
+                food_id=FoodName.objects.filter(Q(food_id=row['FoodID']), ).get_or_create(row['FoodID'])[0],
                 nutrient_id=row['NutrientID'],
                 nutrient_value=row['NutrientValue'],
                 nutrient_source_id=row['NutrientSourceID'],
@@ -65,7 +68,7 @@ class NutrientAmount(models.Model):
             )
             for i, row in df.iterrows()
         ]
-        NutrientAmount.objects.bulk_create(batch_food_name_objects)
+        NutrientAmount.objects.bulk_create(batch_objects)
 
 
 class NutrientName(models.Model):
@@ -83,7 +86,7 @@ class NutrientName(models.Model):
         Helper method that populates the NutrientName model from a csv file
         :param df: data frame object that contains the data from the csv file
         """
-        batch_food_name_objects = [
+        batch_objects = [
             NutrientName(
                 nutrient_id=row['NutrientID'],
                 nutrient_code=row['NutrientCode'],
@@ -94,7 +97,7 @@ class NutrientName(models.Model):
             )
             for i, row in df.iterrows()
         ]
-        NutrientName.objects.bulk_create(batch_food_name_objects)
+        NutrientName.objects.bulk_create(batch_objects)
 
 
 class FoodGroup(models.Model):
@@ -107,10 +110,10 @@ class FoodGroup(models.Model):
     def populate_model_food_group_dataframe(df):
         # TODO: FIND WAY TO GENERALIZE THIS METHOD
         """
-        Helper method that populates the NutrientName model from a csv file
+        Helper method that populates the FoodGroup model from a csv file
         :param df: data frame object that contains the data from the csv file
         """
-        batch_food_name_objects = [
+        batch_objects = [
             FoodGroup(
                 food_group_id=row['FoodGroupID'],
                 food_group_code=row['FoodGroupCode'],
@@ -118,4 +121,50 @@ class FoodGroup(models.Model):
             )
             for i, row in df.iterrows()
         ]
-        FoodGroup.objects.bulk_create(batch_food_name_objects)
+        FoodGroup.objects.bulk_create(batch_objects)
+
+
+class ConversionFactor(models.Model):
+    food_id = models.IntegerField()
+    measure_id = models.IntegerField()
+    conversion_factor_value = models.FloatField()
+    conversion_factor_date_of_entry = models.CharField(max_length=200)
+
+    @staticmethod
+    def populate_model_conversion_factor_dataframe(df):
+        # TODO: FIND WAY TO GENERALIZE THIS METHOD
+        """
+        Helper method that populates the ConversionFactor model from a csv file
+        :param df: data frame object that contains the data from the csv file
+        """
+        batch_objects = [
+            ConversionFactor(
+                food_id=row['FoodID'],
+                measure_id=row['MeasureID'],
+                conversion_factor_value=row['ConversionFactorValue'],
+                conversion_factor_date_of_entry=['ConvFactorDateOfEntry']
+            )
+            for i, row in df.iterrows()
+        ]
+        ConversionFactor.objects.bulk_create(batch_objects)
+
+
+class MeasureName(models.Model):
+    measure_id = models.IntegerField(primary_key=True)
+    measure_description = models.CharField(max_length=200)
+
+    @staticmethod
+    def populate_model_measure_name_dataframe(df):
+        # TODO: FIND WAY TO GENERALIZE THIS METHOD
+        """
+        Helper method that populates the MeasureName model from a csv file
+        :param df: data frame object that contains the data from the csv file
+        """
+        batch_objects = [
+            MeasureName(
+                measure_id=row['MeasureID'],
+                measure_description=row['MeasureDescription'],
+            )
+            for i, row in df.iterrows()
+        ]
+        MeasureName.objects.bulk_create(batch_objects)

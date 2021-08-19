@@ -4,16 +4,26 @@
 <title>Website Name</title>
 </head>
 <body>
-    <form id="search-form" method="POST" action="{% url '' %}">
+    <div style="text-align: center;">
+        {% if search_input %}
+            <h1>You searched for {{ search_input }}</h1>
+            <br/>
+            {% for food_name in food_names %}
+                {{ food_name }}<br/>
+            {% endfor %}
+        {% else %}
+            <h1>No search input</h1>
+        {% endif %}
+    </div>
 
-        {% csrf_token %}
+    <div class="nutrition-label-container">
+        <h4 class="nutrition-facts-header">Nutrition Facts</h4><br/>
+        <h6 class ="nutrition-serving-size">Serving Size </h6>
+        <div class="nutrition-table">
+            <table style="width: 100%">
 
-        <div id="center-search" class="search-container">
-            <div id="search-input" class="search-box">
-                <input id="searchbar" type="text" autocapitalize="none" autocomplete="off" aria-label="Search" placeholder="Search">
-            </div>
+            </table>
         </div>
-    </form>
-
+    </div>
 </body>
 </html>

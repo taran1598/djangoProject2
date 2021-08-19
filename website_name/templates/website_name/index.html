@@ -4,15 +4,14 @@
 <title>Website Name</title>
 </head>
 <body>
-    <form id="search-form" method="POST" action="{% url '' %}">
+    <form id="search-form" method="POST" action="{% url 'website_name:results' %}">
 
         {% csrf_token %}
 
-        <div id="center-search" class="search-container">
-            <div id="search-input" class="search-box">
-                <input id="searchbar" type="text" autocapitalize="none" autocomplete="off" aria-label="Search" placeholder="Search">
-            </div>
-        </div>
+        <input id="searchbar" type="search" autocapitalize="none" autocomplete="off" aria-label="Search"
+                       name="search_input" placeholder="Search">
+        <button class="btn-search" type="submit">Search</button>
+
     </form>
 
 </body>
