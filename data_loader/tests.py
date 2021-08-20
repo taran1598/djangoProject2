@@ -91,7 +91,8 @@ class ParserTests(TestCase):
             ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\MEASURE NAME_TEST.csv"))
         csv_parser = ParserCSV()
         csv_parser.populate_model_from_csv_file_pandas(src_file_path,
-                                                       MeasureName.populate_model_measure_name_dataframe)
+                                                       MeasureName.populate_model_measure_name_dataframe,
+                                                       encoding='iso-8859-1')
 
         # test database has been populated
         objects_count = MeasureName.objects.count()
