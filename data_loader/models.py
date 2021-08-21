@@ -43,34 +43,6 @@ class FoodName(models.Model):
         FoodName.objects.bulk_create(batch_objects)
 
 
-class NutrientAmount(models.Model):
-    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
-    nutrient_id = models.IntegerField()
-    nutrient_value = models.FloatField()
-    nutrient_source_id = models.IntegerField()
-    nutrient_date_of_entry = models.CharField(max_length=200)
-
-    # food_name = models.ForeignKey(FoodName, on_delete=models.CASCADE)
-
-    @staticmethod
-    def populate_model_nutrient_amount_dataframe(df):
-        """
-        Helper method that populates the NutrientAmount model from a csv file
-        :param df: data frame object that contains the data from the csv file
-        """
-        batch_objects = [
-            NutrientAmount(
-                food_id=FoodName.objects.filter(Q(food_id=row['FoodID']), ).get_or_create(row['FoodID'])[0],
-                nutrient_id=row['NutrientID'],
-                nutrient_value=row['NutrientValue'],
-                nutrient_source_id=row['NutrientSourceID'],
-                nutrient_date_of_entry=row['NutrientDateOfEntry'],
-            )
-            for i, row in df.iterrows()
-        ]
-        NutrientAmount.objects.bulk_create(batch_objects)
-
-
 class NutrientName(models.Model):
     nutrient_id = models.IntegerField(primary_key=True)
     nutrient_code = models.IntegerField('Nutrient Code')
@@ -100,6 +72,34 @@ class NutrientName(models.Model):
         NutrientName.objects.bulk_create(batch_objects)
 
 
+class NutrientAmount(models.Model):
+    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
+    nutrient_id = models.ForeignKey(NutrientName, on_delete=models.CASCADE)
+    nutrient_value = models.FloatField()
+    nutrient_source_id = models.IntegerField()
+    nutrient_date_of_entry = models.CharField(max_length=200)
+
+    # food_name = models.ForeignKey(FoodName, on_delete=models.CASCADE)
+
+    @staticmethod
+    def populate_model_nutrient_amount_dataframe(df):
+        """
+        Helper method that populates the NutrientAmount model from a csv file
+        :param df: data frame object that contains the data from the csv file
+        """
+        batch_objects = [
+            NutrientAmount(
+                food_id=FoodName.objects.get(food_id=row['FoodID']),
+                nutrient_id=NutrientName.objects.get(nutrient_id=row['NutrientID']),
+                nutrient_value=row['NutrientValue'],
+                nutrient_source_id=row['NutrientSourceID'],
+                nutrient_date_of_entry=row['NutrientDateOfEntry'],
+            )
+            for i, row in df.iterrows()
+        ]
+        NutrientAmount.objects.bulk_create(batch_objects)
+
+
 class FoodGroup(models.Model):
     food_group_id = models.IntegerField(primary_key=True)
     food_group_code = models.IntegerField()
@@ -125,7 +125,7 @@ class FoodGroup(models.Model):
 
 
 class ConversionFactor(models.Model):
-    food_id = models.IntegerField()
+    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
     measure_id = models.IntegerField()
     conversion_factor_value = models.FloatField()
     conversion_factor_date_of_entry = models.CharField(max_length=200)
@@ -139,7 +139,7 @@ class ConversionFactor(models.Model):
         """
         batch_objects = [
             ConversionFactor(
-                food_id=row['FoodID'],
+                food_id=FoodName.objects.filter(Q(food_id=row['FoodID']), ).get_or_create(row['FoodID'])[0],
                 measure_id=row['MeasureID'],
                 conversion_factor_value=row['ConversionFactorValue'],
                 conversion_factor_date_of_entry=['ConvFactorDateOfEntry']
