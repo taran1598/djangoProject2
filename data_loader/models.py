@@ -79,8 +79,6 @@ class NutrientAmount(models.Model):
     nutrient_source_id = models.IntegerField()
     nutrient_date_of_entry = models.CharField(max_length=200)
 
-    # food_name = models.ForeignKey(FoodName, on_delete=models.CASCADE)
-
     @staticmethod
     def populate_model_nutrient_amount_dataframe(df):
         """
@@ -124,31 +122,6 @@ class FoodGroup(models.Model):
         FoodGroup.objects.bulk_create(batch_objects)
 
 
-class ConversionFactor(models.Model):
-    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
-    measure_id = models.IntegerField()
-    conversion_factor_value = models.FloatField()
-    conversion_factor_date_of_entry = models.CharField(max_length=200)
-
-    @staticmethod
-    def populate_model_conversion_factor_dataframe(df):
-        # TODO: FIND WAY TO GENERALIZE THIS METHOD
-        """
-        Helper method that populates the ConversionFactor model from a csv file
-        :param df: data frame object that contains the data from the csv file
-        """
-        batch_objects = [
-            ConversionFactor(
-                food_id=FoodName.objects.filter(Q(food_id=row['FoodID']), ).get_or_create(row['FoodID'])[0],
-                measure_id=row['MeasureID'],
-                conversion_factor_value=row['ConversionFactorValue'],
-                conversion_factor_date_of_entry=['ConvFactorDateOfEntry']
-            )
-            for i, row in df.iterrows()
-        ]
-        ConversionFactor.objects.bulk_create(batch_objects)
-
-
 class MeasureName(models.Model):
     measure_id = models.IntegerField(primary_key=True)
     measure_description = models.CharField(max_length=200)
@@ -168,3 +141,28 @@ class MeasureName(models.Model):
             for i, row in df.iterrows()
         ]
         MeasureName.objects.bulk_create(batch_objects)
+
+
+class ConversionFactor(models.Model):
+    food_id = models.ForeignKey(FoodName, on_delete=models.CASCADE)
+    measure_id = models.ForeignKey(MeasureName, on_delete=models.CASCADE)
+    conversion_factor_value = models.FloatField()
+    conversion_factor_date_of_entry = models.CharField(max_length=200)
+
+    @staticmethod
+    def populate_model_conversion_factor_dataframe(df):
+        # TODO: FIND WAY TO GENERALIZE THIS METHOD
+        """
+        Helper method that populates the ConversionFactor model from a csv file
+        :param df: data frame object that contains the data from the csv file
+        """
+        batch_objects = [
+            ConversionFactor(
+                food_id=FoodName.objects.get(food_id=row['FoodID']),
+                measure_id=MeasureName.objects.get(measure_id=row['MeasureID']),
+                conversion_factor_value=row['ConversionFactorValue'],
+                conversion_factor_date_of_entry=['ConvFactorDateOfEntry']
+            )
+            for i, row in df.iterrows()
+        ]
+        ConversionFactor.objects.bulk_create(batch_objects)

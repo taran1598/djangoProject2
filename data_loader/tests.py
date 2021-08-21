@@ -83,9 +83,17 @@ class ParserTests(TestCase):
         src_file_path_food_name = Path(PureWindowsPath(
             ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\FOOD_NAME_TEST.csv"))
 
+        src_file_path_measure_name = Path(PureWindowsPath(
+            ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\MEASURE NAME_TEST.csv"))
+
         csv_parser = ParserCSV()
         csv_parser.populate_model_from_csv_file_pandas(src_file_path_food_name,
                                                        FoodName.populate_model_food_name_dataframe)
+
+        csv_parser.populate_model_from_csv_file_pandas(src_file_path_measure_name,
+                                                       MeasureName.populate_model_measure_name_dataframe,
+                                                       encoding='iso-8859-1')
+
         csv_parser.populate_model_from_csv_file_pandas(src_file_path,
                                                        ConversionFactor.populate_model_conversion_factor_dataframe)
 
