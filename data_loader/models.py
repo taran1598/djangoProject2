@@ -15,6 +15,7 @@ class FoodName(models.Model):
     # TODO: CHANGE FIELDS TO ACTUAL DATE FIELDS
     food_date_of_entry = models.CharField(max_length=200)
     food_date_of_publication = models.CharField(max_length=200)
+
     country_code = models.IntegerField(default=None)
     scientific_name = models.CharField(max_length=200, default=None)
 
@@ -45,11 +46,11 @@ class FoodName(models.Model):
 
 class NutrientName(models.Model):
     nutrient_id = models.IntegerField(primary_key=True)
-    nutrient_code = models.IntegerField('Nutrient Code')
+    nutrient_code = models.IntegerField()
     nutrient_symbol = models.CharField(max_length=200)
     nutrient_unit = models.CharField(max_length=200)
     nutrient_name = models.CharField(max_length=200)
-    nutrient_decimals = models.IntegerField("Nutrient Decimals")
+    nutrient_decimals = models.IntegerField()
 
     @staticmethod
     def populate_model_nutrient_name_dataframe(df):
