@@ -8,22 +8,18 @@
         {% if search_input %}
             <h1>You searched for {{ search_input }}</h1>
             <br/>
-            {% for food_name in food_names %}
-                {{ food_name }}<br/>
-            {% endfor %}
+            <div class="search-results">
+                <ul>
+                    {% for food_name in food_names %}
+                        <li><a href="{% url 'website_name:ingredient' food_name.food_id %}">{{ food_name.food_desc }}</a></li>
+                {% endfor %}
+
+                </ul>
+            </div>
         {% else %}
             <h1>No search input</h1>
         {% endif %}
     </div>
 
-    <div class="nutrition-label-container">
-        <h4 class="nutrition-facts-header">Nutrition Facts</h4><br/>
-        <h6 class ="nutrition-serving-size">Serving Size </h6>
-        <div class="nutrition-table">
-            <table style="width: 100%">
-
-            </table>
-        </div>
-    </div>
 </body>
 </html>

@@ -43,7 +43,17 @@ class NutritionLabelBuilderTest(TestCase):
                                                        encoding='iso-8859-1')
 
     def test_get_calories_correct(self):
-
         nutrition_label_builder = NutrientLabelBuilder(food_id=2)
 
         calories = nutrition_label_builder.getCalories()
+
+    def test_get_food_id_two(self):
+        nutrition_label_builder = NutrientLabelBuilder(food_id=2)
+
+        nutrient_info_dictionary = nutrition_label_builder.nutrition_label_builder()
+
+    def test_get_food_id_six(self):
+        nutrition_label_builder = NutrientLabelBuilder(food_id=6)
+
+        nutrient_info_dictionary = nutrition_label_builder.nutrition_label_builder()
+        x = 1
