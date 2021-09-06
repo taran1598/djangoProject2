@@ -24,27 +24,3 @@ class ParserCSV:
         df = pandas.read_csv(src_file_to_parse, encoding=encoding)
         model_to_populate(df)
 
-    @staticmethod
-    def string_to_list(string_to_convert, delimiter) -> list:
-        """
-        Converts string to list. Splits string on the delimiter
-        :param string_to_convert: string to convert to a list
-        :param delimiter: the delimiter that decides where to split the list
-        :return: list that is the result of splitting the list on the delimiter
-        """
-        return string_to_convert.split(delimiter)
-
-    def model_food_name(self, row):
-        """
-        Helper method that populates the FoodName model from a csv file
-        :param row: a row of data (Creates one instance of the FoodName model)
-        """
-        if row[0] != "FoodID":
-            _, created = FoodName.objects.get_or_create(
-                food_id=row[0],
-                food_code=row[1],
-                food_group_id=row[2],
-                food_source_id=row[3],
-                food_desc=row[4],
-                food_date_of_entry=row[6]
-            )

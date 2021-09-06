@@ -5,6 +5,22 @@ from django.db.models import Q
 
 
 # Create your models here.
+
+class NutrientCsvFiles(models.Model):
+    food_name_file_name = models.FileField(upload_to='csvs')
+    nutrient_name_file_name = models.FileField(upload_to='csvs')
+    nutrient_amount_file_name = models.FileField(upload_to='csvs')
+    measure_name_file_name = models.FileField(upload_to='csvs')
+    conversion_factor_file_name = models.FileField(upload_to='csvs')
+
+    uploaded = models.DateTimeField(auto_now_add=True)
+    # True when the csv has be processed and the model that it is suppose to populate is populated
+    activated = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"File id: {self.id}"
+
+
 class FoodName(models.Model):
     food_id = models.IntegerField(primary_key=True)
     food_code = models.IntegerField()
@@ -19,11 +35,12 @@ class FoodName(models.Model):
     country_code = models.IntegerField(default=None)
     scientific_name = models.CharField(max_length=200, default=None)
 
+
     @staticmethod
     def populate_model_food_name_dataframe(df):
         """
         Helper method that populates the FoodName model from a csv file
-        :param df: data frame object that contains the data from the csv file
+        :param df: data frame object that contains the data from a csv file
         """
         batch_objects = [
             FoodName(
@@ -54,7 +71,7 @@ class NutrientName(models.Model):
 
     @staticmethod
     def populate_model_nutrient_name_dataframe(df):
-        # TODO: FIND WAY TO GENERALIZE THIS METHOD
+        # TODO: FIND WAY TO GENERALIZE THIS METHOD. Idea: Call method on abstract so actual can be called
         """
         Helper method that populates the NutrientName model from a csv file
         :param df: data frame object that contains the data from the csv file
