@@ -181,6 +181,11 @@ class UploadFileViewTests(TestCase):
         :return:
         """
 
+        data = {
+            'uploaded': timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59),
+            'activated': False
+        }
+
         file_data = {
             'food_name_file_name': File(open(self.src_file_path_food_name)),
             'nutrient_name_file_name': File(open(self.src_file_path_nutrient_name)),
@@ -189,4 +194,36 @@ class UploadFileViewTests(TestCase):
             'conversion_factor_file_name': File(open(self.src_file_path_conversion_factor)),
         }
 
+        form = CsvModelForm(data, file_data)
+        self.assertTrue(form.is_valid())
+
         response = self.client.post(reverse('data_loader:upload'), file_data)
+
+        # test database has been populated
+
+        # test MeasureName model has been populated
+        objects_count_measure = MeasureName.objects.count()
+        expected_count = 1162
+        self.assertEqual(objects_count_measure, expected_count,
+                         f"Expected count of objects to be {expected_count:.0f}, but found {objects_count_measure:.0f}")
+
+        # test ConversionFactor model has been populated
+        objects_count_conversion = ConversionFactor.objects.count()
+        expected_count = 172
+        self.assertEqual(objects_count_conversion, expected_count,
+                         f"Expected count of objects to be {expected_count:.0f}, "
+                         f"but found {objects_count_conversion:.0f}")
+
+        # test NutrientAmount model has been populated
+        nutrient_amount_objects_count = NutrientAmount.objects.count()
+        expected_count = 3874
+        self.assertEqual(nutrient_amount_objects_count, expected_count,
+                         f"Expected count of objects to be {expected_count:.0f}, "
+                         f"but found {nutrient_amount_objects_count:.0f}")
+
+        # test FoodName model has been populated
+        food_name_objects_count = FoodName.objects.count()
+        expected_count = 40
+        self.assertEqual(food_name_objects_count, expected_count,
+                         f"Expected count of objects to be {expected_count:.0f}, "
+                         f"but found {food_name_objects_count:.0f}")

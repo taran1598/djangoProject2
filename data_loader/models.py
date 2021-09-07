@@ -1,5 +1,6 @@
 import math
 
+from abc import ABC, abstractmethod
 from django.db import models
 from django.db.models import Q
 
@@ -34,7 +35,6 @@ class FoodName(models.Model):
 
     country_code = models.IntegerField(default=None)
     scientific_name = models.CharField(max_length=200, default=None)
-
 
     @staticmethod
     def populate_model_food_name_dataframe(df):
