@@ -17,10 +17,12 @@ class ParserTests(TestCase):
         """
         Tests basic loading of the file into the model
         """
-        src_file_path = Path(PureWindowsPath("C:\\Users\\Tarandeep\\Desktop\\website files\\"
-                                             "Canadian_Nutrient_Files_Test\\FOOD_NAME_TEST.csv"))
+        src_file_path = Path(PureWindowsPath(
+            ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\FOOD_NAME_TEST.csv"))
+
         csv_parser = ParserCSV()
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path, FoodName.populate_model_food_name_dataframe)
+        FoodName.populate_model_food_name_dataframe(csv_parser.populate_model_from_csv_file_pandas(src_file_path,
+                                                                                                   encoding='iso-8859-1'))
         food_name_objects_count = FoodName.objects.count()
         expected_count = 40
         self.assertEqual(food_name_objects_count, expected_count,
@@ -30,11 +32,11 @@ class ParserTests(TestCase):
         """
         Tests basic loading of the file into the model
         """
-        src_file_path_nutrient_amt = Path(PureWindowsPath("C:\\Users\\Tarandeep\\Desktop\\website files\\"
-                                                          "Canadian_Nutrient_Files_Test\\NUTRIENT_AMOUNT_TEST.csv"))
+        src_file_path_nutrient_amount = Path(PureWindowsPath(
+            ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\NUTRIENT_AMOUNT_TEST.csv"))
 
-        src_file_path_food_name = Path(PureWindowsPath("C:\\Users\\Tarandeep\\Desktop\\website files\\"
-                                                       "Canadian_Nutrient_Files_Test\\FOOD_NAME_TEST.csv"))
+        src_file_path_food_name = Path(PureWindowsPath(
+            ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\FOOD_NAME_TEST.csv"))
 
         src_file_path_nutrient_name = Path(PureWindowsPath(".\\data_loader\\test_csv_files"
                                                            "\\Canadian_Nutrient_Files_Test\\NUTRIENT_NAME_TEST.csv"))
@@ -42,15 +44,15 @@ class ParserTests(TestCase):
         # populate data base
         csv_parser = ParserCSV()
 
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path_food_name,
-                                                       FoodName.populate_model_food_name_dataframe)
+        FoodName.populate_model_food_name_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path_food_name, encoding='iso-8859-1'))
 
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path_nutrient_name,
-                                                       NutrientName.populate_model_nutrient_name_dataframe,
-                                                       encoding='iso-8859-1')
+        NutrientName.populate_model_nutrient_name_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path_nutrient_name,
+                                                           encoding='iso-8859-1'))
 
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path_nutrient_amt,
-                                                       NutrientAmount.populate_model_nutrient_amount_dataframe)
+        NutrientAmount.populate_model_nutrient_amount_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path_nutrient_amount))
 
         # test database has been populated
         nutrient_amount_objects_count = NutrientAmount.objects.count()
@@ -64,11 +66,11 @@ class ParserTests(TestCase):
         """
 
         # populate data base
-        src_file_path = Path(PureWindowsPath("C:\\Users\\Tarandeep\\Desktop\\website files\\"
-                                             "Canadian_Nutrient_Files_Test\\FOOD_GROUP_TEST2.csv"))
+        src_file_path = Path(PureWindowsPath(".\\data_loader\\test_csv_files"
+                                             "\\Canadian_Nutrient_Files_Test\\FOOD_GROUP_TEST.csv"))
         csv_parser = ParserCSV()
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path,
-                                                       FoodGroup.populate_model_food_group_dataframe)
+        FoodGroup.populate_model_food_group_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path, encoding='iso-8859-1'))
 
         # test database has been populated
         food_group_objects_count = FoodGroup.objects.count()
@@ -91,15 +93,15 @@ class ParserTests(TestCase):
             ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\MEASURE NAME_TEST.csv"))
 
         csv_parser = ParserCSV()
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path_food_name,
-                                                       FoodName.populate_model_food_name_dataframe)
+        FoodName.populate_model_food_name_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path_food_name, encoding='iso-8859-1'))
 
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path_measure_name,
-                                                       MeasureName.populate_model_measure_name_dataframe,
-                                                       encoding='iso-8859-1')
+        MeasureName.populate_model_measure_name_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path_measure_name,
+                                                           encoding='iso-8859-1'))
 
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path,
-                                                       ConversionFactor.populate_model_conversion_factor_dataframe)
+        ConversionFactor.populate_model_conversion_factor_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path))
 
         # test database has been populated
         objects_count = ConversionFactor.objects.count()
@@ -115,9 +117,8 @@ class ParserTests(TestCase):
         src_file_path = Path(PureWindowsPath(
             ".\\data_loader\\test_csv_files\\Canadian_Nutrient_Files_Test\\MEASURE NAME_TEST.csv"))
         csv_parser = ParserCSV()
-        csv_parser.populate_model_from_csv_file_pandas(src_file_path,
-                                                       MeasureName.populate_model_measure_name_dataframe,
-                                                       encoding='iso-8859-1')
+        MeasureName.populate_model_measure_name_dataframe(
+            csv_parser.populate_model_from_csv_file_pandas(src_file_path, encoding='iso-8859-1'))
 
         # test database has been populated
         objects_count = MeasureName.objects.count()
@@ -227,3 +228,10 @@ class UploadFileViewTests(TestCase):
         self.assertEqual(food_name_objects_count, expected_count,
                          f"Expected count of objects to be {expected_count:.0f}, "
                          f"but found {food_name_objects_count:.0f}")
+
+        # test NutrientName model has been populated
+        nutrient_name_objects_count = NutrientName.objects.count()
+        expected_count = 152
+        self.assertEqual(nutrient_name_objects_count,
+                         expected_count, f"Expected count of objects to be "
+                                         f"{expected_count:.0f}, but found {nutrient_name_objects_count:.0f}")
