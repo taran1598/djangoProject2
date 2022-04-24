@@ -19,8 +19,8 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 urlpatterns = [
+    path('', include('website_name.urls')),
     path('data_loader', include('data_loader.urls')),
-    path('website_name/', include('website_name.urls')),
     path('admin/', admin.site.urls),
 ]
 

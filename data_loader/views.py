@@ -8,7 +8,8 @@ from .parser import ParserCSV
 
 def upload_file_view(request):
     """
-
+    Uploaded files in the form are used to populate database. This view should only be used internally. Don't expose
+    uploading files to public
     :param request:
     :return:
     """
@@ -28,6 +29,3 @@ def upload_file_view(request):
     else:
         form = CsvModelForm()
         return render(request, 'data_loader/upload_page.html', {'form': form})
-
-
-# helper methods
